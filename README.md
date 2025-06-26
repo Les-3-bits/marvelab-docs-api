@@ -71,3 +71,74 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](LICENSE).
+
+# Marvelab Docs API
+
+## Endpoints Prompts IA
+
+### GET /api/prompts
+Retourne la liste des suggestions de prompts pour la génération scientifique (introduction, conclusion, méthodologie, etc.)
+
+**Réponse exemple :**
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "id": "intro-1",
+      "title": "Introduction scientifique",
+      "description": "Générer une introduction pour une publication scientifique basée sur le projet et ses notes.",
+      "template": "Rédige une introduction scientifique pour ce projet en t'appuyant sur les notes et la problématique."
+    },
+    // ...
+  ],
+  "message": "Prompts récupérés avec succès"
+}
+```
+
+### GET /api/prompts/:id
+Retourne un prompt précis par son id.
+
+**Réponse exemple :**
+```json
+{
+  "success": true,
+  "data": {
+    "id": "conclu-1",
+    "title": "Conclusion structurée",
+    "description": "Générer une conclusion structurée à partir des résultats et interprétations.",
+    "template": "Rédige une conclusion structurée à partir des résultats et des interprétations du projet."
+  },
+  "message": "Prompt récupéré avec succès"
+}
+```
+
+## Endpoint Génération IA (Gemini)
+
+### POST /api/gemini/generate
+Permet de générer un texte scientifique à partir d'un prompt et de données structurées, en utilisant l'API Gemini (Google AI).
+
+**Body exemple :**
+```json
+{
+  "prompt": "Rédige une conclusion structurée à partir des résultats et des interprétations du projet.",
+  "data": {
+    "notes": [/* ... */],
+    "interpretations": [/* ... */],
+    "resources": [/* ... */],
+    "methodologies": [/* ... */],
+    "experiments": [/* ... */]
+  }
+}
+```
+
+**Réponse exemple :**
+```json
+{
+  "success": true,
+  "data": {
+    "generatedText": "Voici une conclusion structurée basée sur les résultats..."
+  },
+  "message": "Texte généré avec succès par Gemini"
+}
+```
