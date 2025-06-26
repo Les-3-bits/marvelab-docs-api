@@ -29,23 +29,6 @@ export interface Resource {
   };
 }
 
-export interface Methodology {
-  id: string;
-  title: string;
-  description: string;
-  steps: string[];
-  relatedExperiments: string[];
-}
-
-export interface Experiment {
-  id: string;
-  title: string;
-  protocol: string;
-  parameters: Record<string, any>;
-  results: string;
-  relatedMethodology: string;
-}
-
 export interface Project {
   id: string;
   title: string;
@@ -55,6 +38,4 @@ export interface Project {
   notes: Note[];
   interpretations: Interpretation[];
   resources: Resource[];
-  methodologies: Methodology[];
-  experiments: Experiment[];
 }

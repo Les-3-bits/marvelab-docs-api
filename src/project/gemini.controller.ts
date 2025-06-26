@@ -7,7 +7,9 @@ export class GeminiController {
   constructor(private readonly geminiService: GeminiService) {}
 
   @Post('generate')
-  async generate(@Body() body: GeminiGenerationRequest) {
+  async generate(
+    @Body() body: GeminiGenerationRequest & { projectId: string },
+  ) {
     const result = await this.geminiService.generateText(body);
     return {
       success: true,
@@ -15,4 +17,4 @@ export class GeminiController {
       message: 'Texte généré avec succès par Gemini',
     };
   }
-} 
+}

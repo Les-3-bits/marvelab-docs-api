@@ -1,16 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import {
   Project,
-  Note,
-  Interpretation,
-  Resource,
-  Methodology,
-  Experiment,
 } from '../interfaces/projet.interface';
-import { CreateProjectDto } from '../dto/create-project.dto';
 import * as fs from 'fs';
 import * as path from 'path';
-import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class ProjectService {
@@ -109,39 +102,6 @@ export class ProjectService {
             },
           },
         ],
-        methodologies: [
-          {
-            id: 'method-1',
-            title: 'Protocole de mesure du cortisol salivaire',
-            description:
-              'Méthode standardisée pour mesurer les niveaux de cortisol dans la salive avant et après exposition.',
-            steps: [
-              "Collecte d'échantillons salivaires à jeun",
-              'Exposition contrôlée de 20 minutes',
-              'Nouvelle collecte post-exposition',
-              'Analyse en laboratoire par ELISA',
-              'Analyse statistique des variations',
-            ],
-            relatedExperiments: ['exp-1'],
-          },
-        ],
-        experiments: [
-          {
-            id: 'exp-1',
-            title: 'Étude comparative parc vs milieu urbain',
-            protocol:
-              'Étude randomisée contrôlée avec deux groupes : exposition parc naturel vs marche en environnement urbain dense',
-            parameters: {
-              duration: '20 minutes',
-              participants: 60,
-              groups: 2,
-              measurement: 'cortisol salivaire',
-            },
-            results:
-              'Réduction significative de 15% du taux de cortisol dans le groupe parc (p<0.05)',
-            relatedMethodology: 'method-1',
-          },
-        ],
       },
     ];
   }
@@ -156,118 +116,8 @@ export class ProjectService {
     }
   }
 
-  private writeData(projects: Project[]): void {
-    try {
-      fs.writeFileSync(this.dataPath, JSON.stringify(projects, null, 2));
-    } catch (error) {
-      console.error('Erreur écriture données:', error);
-    }
-  }
-
-  // === CRUD Projects ===
-  findAll(): Project[] {
-    return this.readData();
-  }
-
   findOne(id: string): Project | undefined {
     const projects = this.readData();
     return projects.find((project) => project.id === id);
-  }
-
-  create(createProjectDto: CreateProjectDto): Project {
-    const projects = this.readData();
-    const newProject: Project = {
-      id: uuidv4(),
-      ...createProjectDto,
-      createdAt: new Date().toISOString(),
-      notes: [],
-      interpretations: [],
-      resources: [],
-      methodologies: [],
-      experiments: [],
-    };
-
-    projects.push(newProject);
-    this.writeData(projects);
-    return newProject;
-  }
-
-  // === Gestion des Notes ===
-  findNotesByProject(projectId: string): Note[] {
-    const project = this.findOne(projectId);
-    return project ? project.notes : [];
-  }
-
-  findNoteById(projectId: string, noteId: string): Note | undefined {
-    const project = this.findOne(projectId);
-    return project?.notes.find((note) => note.id === noteId);
-  }
-
-  // === Gestion des Interprétations ===
-  findInterpretationsByProject(projectId: string): Interpretation[] {
-    const project = this.findOne(projectId);
-    return project ? project.interpretations : [];
-  }
-
-  findInterpretationById(
-    projectId: string,
-    interpretationId: string,
-  ): Interpretation | undefined {
-    const project = this.findOne(projectId);
-    return project?.interpretations.find(
-      (interp) => interp.id === interpretationId,
-    );
-  }
-
-  // === Gestion des Ressources ===
-  findResourcesByProject(projectId: string): Resource[] {
-    const project = this.findOne(projectId);
-    return project ? project.resources : [];
-  }
-
-  findResourceById(
-    projectId: string,
-    resourceId: string,
-  ): Resource | undefined {
-    const project = this.findOne(projectId);
-    return project?.resources.find((resource) => resource.id === resourceId);
-  }
-
-  // === Gestion des Méthodologies ===
-  findMethodologiesByProject(projectId: string): Methodology[] {
-    const project = this.findOne(projectId);
-    return project ? project.methodologies : [];
-  }
-
-  // === Gestion des Expériences ===
-  findExperimentsByProject(projectId: string): Experiment[] {
-    const project = this.findOne(projectId);
-    return project ? project.experiments : [];
-  }
-
-  // === Recherche et filtres ===
-  searchContent(projectId: string, query: string) {
-    const project = this.findOne(projectId);
-    if (!project) return null;
-
-    const results = {
-      notes: project.notes.filter(
-        (note) =>
-          note.content.toLowerCase().includes(query.toLowerCase()) ||
-          note.title.toLowerCase().includes(query.toLowerCase()),
-      ),
-      interpretations: project.interpretations.filter(
-        (interp) =>
-          interp.content.toLowerCase().includes(query.toLowerCase()) ||
-          interp.title.toLowerCase().includes(query.toLowerCase()),
-      ),
-      resources: project.resources.filter(
-        (resource) =>
-          resource.description.toLowerCase().includes(query.toLowerCase()) ||
-          resource.title.toLowerCase().includes(query.toLowerCase()),
-      ),
-    };
-
-    return results;
   }
 }
