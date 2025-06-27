@@ -13,6 +13,8 @@ export interface Interpretation {
   relatedNotes: string[];
   createdAt: string;
   confidence: 'low' | 'medium' | 'high';
+  methodologyId?: number;
+  experimentId?: number;
 }
 
 export interface Resource {

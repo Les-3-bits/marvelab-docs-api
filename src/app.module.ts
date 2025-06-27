@@ -4,6 +4,8 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ProjectModule } from './project/projet.module';
 import { GeminiModule } from './project/gemini.module';
+import { MethodologyModule } from './methodology/methodology.module';
+import { ExperimentModule } from './experiment/experiment.module';
 
 @Module({
   imports: [
@@ -13,6 +15,8 @@ import { GeminiModule } from './project/gemini.module';
     }),
     ProjectModule,
     GeminiModule,
+    MethodologyModule,
+    ExperimentModule,
   ],
   controllers: [AppController],
   providers: [AppService],
